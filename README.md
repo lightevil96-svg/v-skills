@@ -28,6 +28,14 @@ A passing test means repository Python/link/packaging behavior, **not** the prop
 
 **Real output proof:** follow [Real Production Validation](docs/vtuber/REAL_PRODUCTION_VALIDATION.md) to capture genuine Cubism projects, official MOC3 consistency checks and actual tracking video. A 10/10 *production capability* claim is **not verified** by repo CI, by a filled form, or by more prose.
 
+## Release evidence: prevent false completion claims
+
+For a **real authorized Live2D build**, generate a blank record with `python scripts/vtuber/validate_release_evidence.py --init path/to/evidence.json`, then attach **actual files, SHA-256 hashes, tool versions, test outcomes and review notes** and run `python scripts/vtuber/validate_release_evidence.py --check path/to/evidence.json`. The checker verifies local references, file hashes and stage prerequisites; it **cannot authenticate app recordings, validate MOC3 internals or grant a 10/10 score**. See [Real Production Validation](docs/vtuber/REAL_PRODUCTION_VALIDATION.md).
+
+The runtime ZIP tool now excludes source/private/unknown files by default; check the exclusions report before distributing. Referenced assets that violate its release policy cause an explicit failure rather than leaking into a release. Custom runtime formats require a reviewed change to the packaging policy.
+
+**Honest remaining gap:** this repository cannot furnish original layered artwork, a Cubism license/GUI, a real MOC3 exporter, target tracking hardware or an independent visual acceptance review. Until a fresh agent passes all 12 evaluation scenarios **and** demonstrates a complete real project with those dependencies, **10/10 production readiness remains NOT VERIFIED**.
+
 ## VTuber / Live2D
 
 - [VTuber Model Builder Skill](skills/vtuber-model-builder/SKILL.md): reusable operating instructions for building, repairing, and validating Live2D/VTube Studio models.
