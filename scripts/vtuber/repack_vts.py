@@ -151,6 +151,30 @@ def select_model(files):
     return index, root, refs, selected, excluded, warnings
 
 
+
+def inspect_asset_signatures(files, root, refs):
+    """Lightweight magic-byte checks; NOT a MOC parser, PNG decoder or SDK integrity test."""
+    import struct
+
+    checked = []
+    for kind, ref in refs:
+        if kind != "Moc" and kind != "Textures":
+            continue
+        data = files.read(root + ref)
+        if kind == "Moc":
+            if len(data) < 64 or data[:4] != b"MOC3":
+                raise PackageError(f"Invalid MOC3 header/size: {ref}; this is not a valid exporter check")
+            checked.append({"kind": "MOC3_header_only", "path": ref, "bytes": len(data)})
+        elif kind == "Textures":
+            if len(data) < 24 or data[:8] != b"\\x89PNG\\r\\n\\x1a\\n" or data[12:16] != b"IHDR":
+                raise PackageError(f"Invalid PNG signature/IHDR: {ref}")
+            width, height = struct.unpack(">II", data[16:24])
+            if width == 0 or height == 0 or width > 32768 or height > 32768:
+                raise PackageError(f"Invalid PNG dimensions: {ref} ({width}x{height})")
+            checked.append({"kind": "PNG_header_only", "path": ref, "width": width, "height": height})
+    return checked
+
+
 def run():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("input", type=Path, help="Folder or ZIP containing exactly one Live2D model")
@@ -165,10 +189,11 @@ def run():
     files = InputFiles(args.input)
     try:
         index, root, refs, selected, excluded, warnings = select_model(files)
+        header_checks = inspect_asset_signatures(files, root, refs)
         name = args.folder_name or ((root.rstrip("/").split("/")[-1] if root else PurePosixPath(index).name.split(".model3.json")[0]) + "_vts")
         if not re.fullmatch(r"[A-Za-z0-9_.-]+", name) or name in (".", ".."):
             raise PackageError("--folder-name must be simple ASCII filename without slashes")
-        result = {"model_index": index, "root_in_input": root or ".", "model_folder_for_release": name, "runtime_files": len(selected), "references_checked": len(refs), "excluded_build_files": excluded, "warnings": warnings, "runtime_verified": False}
+        result = {"model_index": index, "root_in_input": root or ".", "model_folder_for_release": name, "runtime_files": len(selected), "references_checked": len(refs), "excluded_build_files": excluded, "warnings": warnings, "runtime_verified": False, "asset_header_checks": header_checks, "binary_integrity_verified": False}
         if args.output:
             if args.output.suffix.lower() != ".zip":
                 raise PackageError("Output must end in .zip")
@@ -185,6 +210,7 @@ def run():
                 out = InputFiles(args.output)
                 try:
                     _, _, out_refs, out_selected, _, _ = select_model(out)
+                    inspect_asset_signatures(out, f"{name}/", out_refs)
                     if len(out_refs) != len(refs) or len(out_selected) != len(selected):
                         raise PackageError("Output ZIP verification count mismatch")
                 finally:
