@@ -5,6 +5,17 @@ description: Build, repair, rig, animate, package, and validate Live2D/VTube Stu
 
 # VTuber Model Builder
 
+## READ FIRST — mandatory fresh-agent start sequence
+
+**Do not begin by generating files.** Read [START_HERE_AGENT.md](../../docs/vtuber/START_HERE_AGENT.md), then choose the [Live2D execution runbook](../../docs/vtuber/LIVE2D_EXECUTION_RUNBOOK.md) when VTube Studio is the target, read [Troubleshooting and Limitations](../../docs/vtuber/TROUBLESHOOTING_AND_LIMITS.md) on any blocker, and apply [Production QA Matrix](../../docs/vtuber/PRODUCTION_QA_MATRIX.md). The [Agent Readiness Audit](../../docs/vtuber/AGENT_READINESS_AUDIT.md) contains adversarial cold-start scenarios and unproven areas.
+
+1. **Intent and permission:** determine whether requested output is skill/docs-only, inspection, source artwork, Cubism rig, packaging or real app test; do not act outside that stage. A docs-only request must **never** trigger edits or demands for the user's model.
+2. **Current state:** inventory actual supplied files, source type, dimensions/hashes, app target, available editor/license/GUI and rights. This repo itself contains instructions and scripts; **do not pretend it contains model binaries or the user's assets**.
+3. **Tool and format gate:** for Live2D, a genuine editable `.cmo3` is authored/saved by Cubism or a demonstrated compatible authoring tool; a `.moc3` must originate from a working exporter. Python manifest/ZIP scripts **cannot create real rig deformations by naming a file .moc3**. Cubism SDK consumption is not equivalent to an authoring workflow. If editor/exporter unavailable, stop at verified art/static preparation and mark native export **NOT RUN**.
+4. **Stage gates:** concept → editable separated art → genuine `.cmo3`/rig → genuine exported `.moc3`/model3/textures → actual VTube Studio import → streaming tracking/QA. No stage can be promoted without its own evidence.
+5. **Partial completion:** if a dependency is missing, still deliver safe, verifiable authorized work; report `DONE`, `BLOCKED`, `STATIC`, `VISUAL`, `RUNTIME NOT RUN`, and the next exact action. No guessed paths, passing tests, model scores or fake binary files.
+6. **Original and environment preservation:** no destructive writes, unauthorized redesign, unseen anatomy synthesis, or external art upload. Keep identity and references canonical, development and runtime releases separate.
+
 ## Extended research and test standards
 
 For new or AI-assisted work, read **[AI Production Research](../../docs/vtuber/AI_PRODUCTION_RESEARCH_2026.md)** and **[Production QA Matrix](../../docs/vtuber/PRODUCTION_QA_MATRIX.md)**, alongside the current [Build Playbook](../../docs/vtuber/BUILD_PLAYBOOK.md) and model case study. The [AI Production Agent Prompt](../../prompts/VTUBER_AI_PRODUCTION_AGENT.md) provides a reusable scoped execution template.
