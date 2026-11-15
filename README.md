@@ -20,6 +20,14 @@ python scripts/vtuber/repack_vts.py INPUT.zip --inspect
 
 A passing test means repository Python/link/packaging behavior, **not** the proprietary MOC3's full correctness or VTube Studio compatibility. Use [Cubism SDK consistency verification](https://docs.live2d.com/en/cubism-sdk-manual/moc3-consistency/) and real in-app evidence when possible.
 
+## Verify an AI agent — no invented 10/10
+
+**Tooling preflight (read-only):** `python scripts/vtuber/preflight.py --source /path/to/art_or_model.zip --target live2d`. It detects extensions and supplied application paths; it **does not** run Cubism, validate input layers, or confirm VTube Studio.
+
+**Cold-start comprehension exam:** [12 independent challenges](evals/agent_cases.json), with manual transcript-based scoring via [evaluation script](scripts/vtuber/evaluate_agent_cases.py). Initialize a blank worksheet with `python scripts/vtuber/evaluate_agent_cases.py --init evaluation-results.json`; it starts at 12 NOT_RUN. An actual reviewer and saved responses are needed to mark cases PASS. **No new agent has completed these challenges during this repo audit.**
+
+**Real output proof:** follow [Real Production Validation](docs/vtuber/REAL_PRODUCTION_VALIDATION.md) to capture genuine Cubism projects, official MOC3 consistency checks and actual tracking video. A 10/10 *production capability* claim is **not verified** by repo CI, by a filled form, or by more prose.
+
 ## VTuber / Live2D
 
 - [VTuber Model Builder Skill](skills/vtuber-model-builder/SKILL.md): reusable operating instructions for building, repairing, and validating Live2D/VTube Studio models.
