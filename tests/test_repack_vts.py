@@ -9,6 +9,16 @@ from pathlib import Path
 
 SCRIPT = Path(__file__).resolve().parents[1] / 'scripts' / 'vtuber' / 'repack_vts.py'
 
+def synthetic_png():
+    """Build an actual 1x1 PNG; no external dependencies."""
+    import struct
+    import zlib
+    def chunk(kind, payload):
+        return struct.pack(">I", len(payload)) + kind + payload + struct.pack(">I", zlib.crc32(kind + payload) & 0xffffffff)
+    ihdr = struct.pack(">IIBBBBB", 1, 1, 8, 6, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IDAT", zlib.compress(b"\x00\x00\x00\x00\x00")) + chunk(b"IEND", b"")
+
+
 
 def fixture(root, bad=False):
     model = root / 'OrangeScarf'
@@ -17,8 +27,8 @@ def fixture(root, bad=False):
     (root / 'Source').mkdir()
     (root / 'Source' / 'original.psd').write_bytes(b'original')
     (root / 'BUILD_REPORT.txt').write_text('non-runtime report')
-    (model / 'OrangeScarf.moc3').write_bytes(b'test-only; not real moc3')
-    (model / 'OrangeScarf.2048' / 'texture_00.png').write_bytes(b'test-only; not real PNG')
+    (model / 'OrangeScarf.moc3').write_bytes(b'MOC3' + bytes(60))  # mock header, NOT real Cubism export
+    (model / 'OrangeScarf.2048' / 'texture_00.png').write_bytes(synthetic_png())
     (model / 'OrangeScarf.physics3.json').write_text('{}')
     (model / 'animations' / 'Idle.motion3.json').write_text('{}')
     (model / 'OrangeScarf.model3.json').write_text(json.dumps({'Version': 3, 'FileReferences': {'Moc': '../Source/original.psd' if bad else 'OrangeScarf.moc3', 'Textures': ['OrangeScarf.2048/texture_00.png'], 'Physics': 'OrangeScarf.physics3.json', 'Motions': {'Idle': [{'File': 'animations/Idle.motion3.json'}]}}}))
@@ -53,6 +63,20 @@ class RepackTest(unittest.TestCase):
             run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
             self.assertNotEqual(run.returncode, 0)
             self.assertIn('Path traversal', run.stderr)
+
+    def test_reject_fake_moc3_and_bad_png(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            (root / 'OrangeScarf' / 'OrangeScarf.moc3').write_bytes(b'not actually a MOC3')
+            invalid_moc = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(invalid_moc.returncode, 0)
+            self.assertIn('Invalid MOC3 header', invalid_moc.stderr)
+            (root / 'OrangeScarf' / 'OrangeScarf.moc3').write_bytes(b'MOC3' + bytes(60))
+            (root / 'OrangeScarf' / 'OrangeScarf.2048' / 'texture_00.png').write_bytes(b'not a png')
+            invalid_png = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(invalid_png.returncode, 0)
+            self.assertIn('Invalid PNG signature', invalid_png.stderr)
 
     def test_missing_reference_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
