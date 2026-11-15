@@ -148,6 +148,43 @@ class RepackTest(unittest.TestCase):
             self.assertNotEqual(run.returncode, 0)
             self.assertIn('Expected exactly one', run.stderr)
 
+    def test_dev_and_sensitive_files_never_leak_into_release(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            model = root / 'OrangeScarf'
+            (model / '.env').write_text('TOKEN=do_not_copy')
+            (model / 'api_key.json').write_text('{"secret":"do_not_copy"}')
+            (model / 'extra_source.cmo3').write_bytes(b'non-runtime source')
+            (model / 'user_notes.txt').write_text('not a runtime asset')
+            (model / 'icon.jpg').write_bytes(b'optional icon for fixture')
+            output = Path(tmp) / 'release.zip'
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--output', str(output)],
+                                 capture_output=True, text=True)
+            self.assertEqual(run.returncode, 0, run.stderr)
+            with zipfile.ZipFile(output) as z:
+                names = z.namelist()
+            self.assertTrue(any(name.endswith('/icon.jpg') for name in names))
+            for forbidden in ('.env', 'api_key.json', 'extra_source.cmo3', 'user_notes.txt'):
+                self.assertFalse(any(name.endswith('/' + forbidden) for name in names), forbidden)
+            report = json.loads(run.stdout)
+            self.assertTrue(any('api_key.json' in warning for warning in report['warnings']))
+
+    def test_required_secret_path_is_not_exported(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            model = root / 'OrangeScarf'
+            (model / 'api_key.json').write_text('{}')
+            manifest_file = model / 'OrangeScarf.model3.json'
+            manifest = json.loads(manifest_file.read_text())
+            manifest['FileReferences']['UserData'] = 'api_key.json'
+            manifest_file.write_text(json.dumps(manifest))
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'],
+                                 capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('violates release policy', run.stderr)
+
     def test_missing_reference_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / 'input'
