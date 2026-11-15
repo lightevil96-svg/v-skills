@@ -58,6 +58,13 @@ A valid end-to-end demonstration must record:
 
 No real OrangeScarf/Hiyori model archive or Cubism/VTS runtime was supplied or operated in **this repository audit**. The status of full production must therefore remain **NOT RUN**, independent of improvements to docs or unit tests.
 
+## Additional protections in this revision (2026-11-15)
+
+- Release ZIP repacker now excludes non-runtime source and likely secrets using a conservative allowlist and fails closed when an explicitly referenced asset is forbidden. Negative tests cover privacy leakage and a forbidden referenced file.
+- [Evidence validator](../../scripts/vtuber/validate_release_evidence.py) introduces stage-specific artifact hashes, status gates and target-tool provenance for **real** Live2D builds, while explicitly reporting that it does **not** authenticate videos, model creation or subjective quality.
+- New synthetic tests reject self-proclaimed stream-ready with no evidence, local path escapes and SHA mismatch.
+- These tests improve safety and reproducibility; **none** supply an independent fresh-agent exam or a genuine new Cubism-to-VTube-Studio model demonstration.
+
 ## Current limits, even after all documented fixes
 
 - This repo **is a reusable knowledge base, scripts and QA harness**, not a fully automated Live2D generation engine.
