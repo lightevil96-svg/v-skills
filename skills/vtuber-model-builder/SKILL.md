@@ -19,6 +19,10 @@ For new or AI-assisted work, read **[AI Production Research](../../docs/vtuber/A
 
 Produce a stable, visually coherent, responsive VTuber model. Treat the artwork, mesh, parameters, physics, motions, VTube Studio configuration, and package as one system. Do not optimize one layer while silently breaking another.
 
+## Required packaging gate for VTube Studio
+
+Before claiming that an OrangeScarf/Live2D release is installable, distinguish **outer development bundle** from **inner runtime folder**. Read [VTS Folder Structure & Repack](../../docs/vtuber/VTS_FOLDER_STRUCTURE_AND_REPACK.md). Use [repack_vts.py](../../scripts/vtuber/repack_vts.py) for safe non-destructive validation and a new clean runtime ZIP. Require one model3 index with existing referenced MOC3/textures/optional other assets, correct relative paths, no source reports in runtime root, and revalidation of the generated ZIP. **Do not invent missing files or claim real OrangeScarf ZIP was repaired without its actual contents.** Test the extracted folder in VTube Studio and mark absent runtime tests NOT RUN. Keep the development source/backups separate.
+
 ## Tool selection
 
 - Use container/Python for archive inspection, image processing, code edits, mesh/UV analysis, deterministic builds, and static validation.
