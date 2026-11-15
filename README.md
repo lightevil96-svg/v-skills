@@ -4,7 +4,7 @@ A reusable knowledge base of agent skills, technical playbooks, prompts, and ver
 
 ## AI agent: start here
 
-**New AI agent? Read [START_HERE_AGENT.md](docs/vtuber/START_HERE_AGENT.md) first.** Then use the [step-by-step Live2D runbook](docs/vtuber/LIVE2D_EXECUTION_RUNBOOK.md), [troubleshooting and limitations](docs/vtuber/TROUBLESHOOTING_AND_LIMITS.md), [QA matrix](docs/vtuber/PRODUCTION_QA_MATRIX.md) and [cold-start audit](docs/vtuber/AGENT_READINESS_AUDIT.md). The root skill is [VTuber Model Builder](skills/vtuber-model-builder/SKILL.md).
+**New AI agent? Read [START_HERE_AGENT.md](docs/vtuber/START_HERE_AGENT.md) first.** Then use the [step-by-step Live2D runbook](docs/vtuber/LIVE2D_EXECUTION_RUNBOOK.md) or [3D/VRM runbook](docs/vtuber/VRM_3D_EXECUTION_RUNBOOK.md), [troubleshooting and limitations](docs/vtuber/TROUBLESHOOTING_AND_LIMITS.md), [QA matrix](docs/vtuber/PRODUCTION_QA_MATRIX.md) and [cold-start audit](docs/vtuber/AGENT_READINESS_AUDIT.md). The root skill is [VTuber Model Builder](skills/vtuber-model-builder/SKILL.md).
 
 **Honest promise:** This repo is a knowledge base, prompts and structural packaging checks, **not a one-click professional Live2D authoring engine**. It does not supply a genuine .cmo3, .moc3, layered art, Cubism Editor or real VTube Studio runtime. To finish a high-quality working model the agent needs the actual source artwork, a compatible Cubism authoring/export environment, and in-app testing. Unit tests with synthetic fixtures do NOT certify a real model. For skill-only requests, no model edits should be performed.
 
