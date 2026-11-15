@@ -27,6 +27,21 @@ MAX_SINGLE_FILE = 512 * 1024 * 1024
 MAX_TOTAL_FILES = 2 * 1024 * 1024 * 1024
 MAX_COMPRESSION_RATIO = 1000
 
+# These are conservative defaults for packaging a VTube Studio runtime directory,
+# NOT a claim that these are the only VTS-accepted file types. Unknown files are
+# omitted with a warning. Source files/private data are never copied automatically.
+RUNTIME_SUFFIXES = (
+    ".model3.json", ".moc3", ".physics3.json", ".pose3.json", ".cdi3.json",
+    ".userdata3.json", ".motion3.json", ".exp3.json", ".vtube.json",
+    ".png", ".jpg", ".jpeg", ".wav", ".ogg", ".mp3", ".json",
+)
+NEVER_EXPORT_SUFFIXES = (
+    ".psd", ".psb", ".clip", ".cmo3", ".can3", ".blend", ".vroid",
+    ".zip", ".7z", ".rar", ".py", ".sh", ".bat", ".exe", ".dll", ".pem",
+    ".key", ".sqlite", ".db", ".txt", ".md",
+)
+PRIVATE_NAME_MARKERS = ("secret", "password", "credential", "apikey", "api_key", "private_key", "id_rsa", "access_token")
+
 
 def validate_file_budget(entries):
     if len(entries) > MAX_ENTRIES:
@@ -137,6 +152,20 @@ def refs_in_manifest(data):
     return [(kind, safe_path(value)) for kind, value in refs]
 
 
+def export_policy(relative_path):
+    """Return (include, reason) for a nonreferenced runtime-root file."""
+    parts = relative_path.lower().split("/")
+    if any(p.startswith(".") or p in EXCLUDE_TOP_DIRS for p in parts):
+        return False, "hidden/source directory"
+    if any(marker in p for p in parts for marker in PRIVATE_NAME_MARKERS):
+        return False, "possible private or credential file"
+    if any(relative_path.lower().endswith(suffix) for suffix in NEVER_EXPORT_SUFFIXES):
+        return False, "development/non-runtime extension"
+    if any(relative_path.lower().endswith(suffix) for suffix in RUNTIME_SUFFIXES):
+        return True, "recognized runtime asset"
+    return False, "unknown extension (review manually)"
+
+
 def select_model(files):
     model_indexes = sorted(n for n in files.items if n.endswith(".model3.json"))
     if len(model_indexes) != 1:
@@ -151,15 +180,37 @@ def select_model(files):
     missing = [(kind, ref) for kind, ref in refs if root + ref not in files.items]
     if missing:
         raise PackageError("Missing manifest references (paths are case-sensitive): " + json.dumps(missing, ensure_ascii=False))
+    # Detect collisions on ALL files within the candidate model root, even if
+    # filtered later (Windows/macOS often have case-insensitive file systems).
+    root_files = [name[len(root):] for name in sorted(files.items) if name.startswith(root)]
+    duplicates = {}
+    for rel in root_files:
+        lower = rel.lower()
+        if lower in duplicates:
+            raise PackageError(f"Case-insensitive path collision: {duplicates[lower]} vs {rel}")
+        duplicates[lower] = rel
+
     selected = {}
     excluded = []
+    warnings = []
+    required = {ref for kind, ref in refs}
+    required.add(index[len(root):])
     for fullname in sorted(files.items):
         if not fullname.startswith(root):
             continue
         rel = fullname[len(root):]
         top = rel.split("/", 1)[0].lower()
         if not rel or top in EXCLUDE_TOP_DIRS or top in EXCLUDE_TOP_FILES:
+            if rel in required:
+                raise PackageError(f"Referenced runtime asset is under development-only path: {rel}")
             excluded.append(fullname)
+            continue
+        allowed, reason = export_policy(rel)
+        if not allowed:
+            if rel in required:
+                raise PackageError(f"Referenced runtime asset violates release policy: {rel} ({reason})")
+            excluded.append(fullname)
+            warnings.append(f"Excluded {rel}: {reason}")
             continue
         selected[rel] = fullname
     for kind, ref in refs:
@@ -167,13 +218,6 @@ def select_model(files):
             raise PackageError(f"Referenced {kind} file is excluded from runtime: {ref}")
     if index[len(root):] not in selected:
         raise PackageError("Main model3 file was excluded")
-    duplicates = {}
-    for rel in selected:
-        lower = rel.lower()
-        if lower in duplicates:
-            raise PackageError(f"Case-insensitive path collision: {duplicates[lower]} vs {rel}")
-        duplicates[lower] = rel
-    warnings = []
     if "Physics" not in manifest["FileReferences"]:
         warnings.append("Physics is not registered; model may have no physics")
     return index, root, refs, selected, excluded, warnings
