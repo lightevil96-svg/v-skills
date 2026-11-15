@@ -10,6 +10,7 @@ on:
       - 'evals/**'
       - '.github/workflows/vtuber-skill-qa.yml'
       - 'README.md'
+      - 'AGENTS.md'
   pull_request:
     paths:
       - 'skills/**'
@@ -20,6 +21,7 @@ on:
       - 'evals/**'
       - '.github/workflows/vtuber-skill-qa.yml'
       - 'README.md'
+      - 'AGENTS.md'
 
 permissions:
   contents: read
