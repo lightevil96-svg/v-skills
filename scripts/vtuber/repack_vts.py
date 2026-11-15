@@ -86,12 +86,10 @@ class InputFiles:
             raise PackageError("Input must be a folder or an existing ZIP")
         if not self.items:
             raise PackageError("Input contains no files")
-        budgets = [
-            (name, info.file_size, info.compress_size)
-            if self.zip else (name, path.stat().st_size, None)
-            for name, info in self.items.items()
-            for path in ([info] if not self.zip else [None])
-        ]
+        if self.zip:
+            budgets = [(name, item.file_size, item.compress_size) for name, item in self.items.items()]
+        else:
+            budgets = [(name, item.stat().st_size, None) for name, item in self.items.items()]
         validate_file_budget(budgets)
 
     def read(self, name):
@@ -187,7 +185,7 @@ def inspect_png_container(data, ref):
 
     This is NOT a complete PNG pixel decoder nor evidence of visual quality.
     """
-    signature = b"\\x89PNG\\r\\n\\x1a\\n"
+    signature = b"\x89PNG\r\n\x1a\n"
     if not data.startswith(signature):
         raise PackageError(f"Invalid PNG signature: {ref}")
     offset, width, height, seen_ihdr, seen_idat, seen_iend = 8, None, None, False, False, False
