@@ -5,6 +5,9 @@ A reusable knowledge base of agent skills, technical playbooks, prompts, and ver
 ## VTuber / Live2D
 
 - [VTuber Model Builder Skill](skills/vtuber-model-builder/SKILL.md): reusable operating instructions for building, repairing, and validating Live2D/VTube Studio models.
+- [AI-Assisted Production Research (2026)](docs/vtuber/AI_PRODUCTION_RESEARCH_2026.md): sourced 2D/3D production routes, AI assistance boundaries, editing and compatibility constraints, licenses, and OrangeScarf experiments.
+- [Production QA Matrix](docs/vtuber/PRODUCTION_QA_MATRIX.md): measurable quality gates, pose grids, static validation, target-app runtime evidence, and release decisions.
+- [AI Production Agent Prompt](prompts/VTUBER_AI_PRODUCTION_AGENT.md): end-to-end prompt with scope, permissions, tools, format compatibility and stopping rules.
 - [Build Playbook](docs/vtuber/BUILD_PLAYBOOK.md): repeatable workflow, quality gates, asset requirements, rigging, physics, motion, and packaging.
 - [OrangeScarf Case Study](docs/vtuber/ORANGESCARF_CASE_STUDY.md): verified findings, root causes, fixes, constraints, and next tests from OrangeScarf v0.1-v0.4.
 - [Reusable Agent Prompt](prompts/VTUBER_MODEL_AGENT.md): scoped prompt template for future VTuber model work.
