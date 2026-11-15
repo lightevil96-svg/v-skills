@@ -166,7 +166,7 @@ def inspect_asset_signatures(files, root, refs):
                 raise PackageError(f"Invalid MOC3 header/size: {ref}; this is not a valid exporter check")
             checked.append({"kind": "MOC3_header_only", "path": ref, "bytes": len(data)})
         elif kind == "Textures":
-            if len(data) < 24 or data[:8] != b"\\x89PNG\\r\\n\\x1a\\n" or data[12:16] != b"IHDR":
+            if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
                 raise PackageError(f"Invalid PNG signature/IHDR: {ref}")
             width, height = struct.unpack(">II", data[16:24])
             if width == 0 or height == 0 or width > 32768 or height > 32768:
