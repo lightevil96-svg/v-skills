@@ -2,6 +2,8 @@
 
 Applies to AI-assisted 2D Live2D/VTube Studio and 3D/VRM pipelines. This is a **reusable test specification**, not a report that a particular model passed. Pair with [AI_PRODUCTION_RESEARCH_2026.md](AI_PRODUCTION_RESEARCH_2026.md), [BUILD_PLAYBOOK.md](BUILD_PLAYBOOK.md), and the active project's case study.
 
+> **Tool result boundary:** repository unit tests can only validate their implemented checks. In particular, valid JSON and correct PNG/MOC magic bytes do **not** establish valid model geometry or importability. For real compiled models use available [Cubism SDK integrity checks](https://docs.live2d.com/en/cubism-sdk-manual/moc3-consistency/) and then the actual target app. See [START_HERE_AGENT.md](START_HERE_AGENT.md) for stage statuses and [LIVE2D_EXECUTION_RUNBOOK.md](LIVE2D_EXECUTION_RUNBOOK.md) for hands-on steps.
+
 ## Gate 0 — Intake / permissions / reproducibility
 
 - [ ] Target format, **exact target runtime/version**, platform (PC/mobile) and target crop are stated.
