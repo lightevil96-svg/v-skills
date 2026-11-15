@@ -101,6 +101,12 @@ Tool behavior:
 
 **Important limitations:** The script does **not** change the PNG artwork, re-rig the character, convert an invalid MOC3, create missing physics/texture files, repair incorrect parameter IDs, or guarantee that a valid-JSON model renders properly. If a manifest references assets outside the model directory using `../`, the tool **fails deliberately** instead of silently restructuring them. Fix the model source/export or obtain required missing assets separately.
 
+## Runtime ZIP privacy and extension policy
+
+The repacker now uses a conservative set of known VTube Studio runtime filename extensions and rejects/omits material that looks like development source or private data. PSD/PSB/CLIP, .cmo3/.can3, scripts, archives, credential/secret-like names, hidden files and unrecognized extensions are not silently copied into releases. Files needed by the actual `.model3.json` that violate this safety policy cause a **hard failure**; do not edit the manifest just to silence it. For an unusual legitimate custom format, review and amend the allowlist with evidence from current VTube Studio support before production. The list is a project default, **not** an official exhaustive VTube Studio extension specification.
+
+This only protects **the files selected by the script**, not confidentiality in arbitrary other distribution archives or correctness of the compiled MOC3. Inspect every excluded file and the final ZIP manually before sharing.
+
 ## 5. End-to-end release acceptance checklist
 
 - [ ] ZIP contains exactly **one** runtime root folder; development files do not appear beside the model.
