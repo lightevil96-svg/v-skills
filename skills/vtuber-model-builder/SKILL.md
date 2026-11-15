@@ -33,6 +33,12 @@ description: Build, repair, rig, animate, package, and validate Live2D/VTube Stu
 - To report *stream-ready* model production, follow [Real Production Validation](../../docs/vtuber/REAL_PRODUCTION_VALIDATION.md) and use official [MOC3 Consistency Checker](https://docs.live2d.com/en/cubism-editor-manual/moc3-consistency-checker/) or SDK integrity checks on **the real exported MOC3**, plus actual VTube Studio import/tracking and user visual acceptance.
 - Do not claim a **10/10 completion** based on documentation, file suffixes, code unit tests, syntax/lint success or manual self-scoring. Keep comprehension, structural CI, native authoring, runtime, and aesthetics separate. Mark every unexecuted gate NOT RUN and state the missing dependency.
 
+## Release claim attestation (non-negotiable)
+
+Before announcing that a real model is `ART_READY`, `RIG_AUTHORED`, `RUNTIME_EXPORTED`, `APP_IMPORTED` or `STREAM_READY`, collect and review source/editor/runtime evidence using [Real Production Validation](../../docs/vtuber/REAL_PRODUCTION_VALIDATION.md). A conservative [evidence validator](../../scripts/vtuber/validate_release_evidence.py) can check file hashes, status prerequisites and local provenance records, but **cannot independently prove a claim is true**. Do not claim 10/10, even if its JSON checks pass, until independent fresh-agent testing, a real Cubism/VRM production trial, actual app tracking and visual approval exist. When unavailable, report the maximum **verified** milestone and mark later stages `NOT_RUN`.
+
+When packaging a real VTS model under explicit permission, use the [runtime repacker](../../scripts/vtuber/repack_vts.py) only after reviewing its **source-file and private-data exclusion policy**. Never package credential files, PSD/.cmo3, unknown binary assets or sensitive source materials into a runtime release by default; unknown file extensions require review, not silent inclusion. Report excluded files and stop on referenced forbidden assets rather than forging paths.
+
 ## Mission
 
 Produce a stable, visually coherent, responsive VTuber model. Treat the artwork, mesh, parameters, physics, motions, VTube Studio configuration, and package as one system. Do not optimize one layer while silently breaking another.
