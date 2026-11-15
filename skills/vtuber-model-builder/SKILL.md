@@ -5,6 +5,16 @@ description: Build, repair, rig, animate, package, and validate Live2D/VTube Stu
 
 # VTuber Model Builder
 
+## Extended research and test standards
+
+For new or AI-assisted work, read **[AI Production Research](../../docs/vtuber/AI_PRODUCTION_RESEARCH_2026.md)** and **[Production QA Matrix](../../docs/vtuber/PRODUCTION_QA_MATRIX.md)**, alongside the current [Build Playbook](../../docs/vtuber/BUILD_PLAYBOOK.md) and model case study. The [AI Production Agent Prompt](../../prompts/VTUBER_AI_PRODUCTION_AGENT.md) provides a reusable scoped execution template.
+
+- Select **Live2D for VTube Studio**; VRM/3D needs a compatible 3D runtime. VRM 0.x and 1.0 support differs across applications.
+- AI-assisted face generation in Cubism is **semi-automatic** and documented for front-facing source faces; manually verify diagonals, feature occlusion and expressive keyforms.
+- Image segmentation and generative inpainting never automatically establish missing hidden geometry/anatomy or permission to alter the character.
+- AI upscaling, AI mesh generation, exported files and static validators are candidates/partial evidence, **not proof** of visual correctness, licensing or app runtime success.
+- Apply the QA matrix release gates: identity, layers, mesh/UV, parameters, pose grid, expressions, physics, package, actual target app and measured performance; explicitly mark unavailable runtime tests NOT RUN.
+
 ## Mission
 
 Produce a stable, visually coherent, responsive VTuber model. Treat the artwork, mesh, parameters, physics, motions, VTube Studio configuration, and package as one system. Do not optimize one layer while silently breaking another.
