@@ -175,10 +175,10 @@ class RepackTest(unittest.TestCase):
             root = Path(tmp) / 'input'
             fixture(root)
             model = root / 'OrangeScarf'
-            (model / 'api_key.json').write_text('{}')
+            (model / 'api_key.userdata3.json').write_text('{}')
             manifest_file = model / 'OrangeScarf.model3.json'
             manifest = json.loads(manifest_file.read_text())
-            manifest['FileReferences']['UserData'] = 'api_key.json'
+            manifest['FileReferences']['UserData'] = 'api_key.userdata3.json'
             manifest_file.write_text(json.dumps(manifest))
             run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'],
                                  capture_output=True, text=True)
