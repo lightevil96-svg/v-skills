@@ -185,6 +185,22 @@ class RepackTest(unittest.TestCase):
             self.assertNotEqual(run.returncode, 0)
             self.assertIn('violates release policy', run.stderr)
 
+    def test_wrong_manifest_texture_extension_is_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            model = root / 'OrangeScarf'
+            texture = model / 'OrangeScarf.2048' / 'texture_00.png'
+            texture.rename(texture.with_suffix('.jpg'))
+            manifest_file = model / 'OrangeScarf.model3.json'
+            manifest = json.loads(manifest_file.read_text())
+            manifest['FileReferences']['Textures'] = ['OrangeScarf.2048/texture_00.jpg']
+            manifest_file.write_text(json.dumps(manifest))
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'],
+                                 capture_output=True, text=True)
+            self.assertEqual(run.returncode, 2)
+            self.assertIn('Incorrect asset extension', run.stderr)
+
     def test_missing_reference_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / 'input'
