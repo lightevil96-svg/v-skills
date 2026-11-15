@@ -19,9 +19,41 @@ For new or AI-assisted work, read **[AI Production Research](../../docs/vtuber/A
 
 Produce a stable, visually coherent, responsive VTuber model. Treat the artwork, mesh, parameters, physics, motions, VTube Studio configuration, and package as one system. Do not optimize one layer while silently breaking another.
 
-## Required packaging gate for VTube Studio
+## Mandatory VTube Studio packaging and folder structure policy
 
-Before claiming that an OrangeScarf/Live2D release is installable, distinguish **outer development bundle** from **inner runtime folder**. Read [VTS Folder Structure & Repack](../../docs/vtuber/VTS_FOLDER_STRUCTURE_AND_REPACK.md). Use [repack_vts.py](../../scripts/vtuber/repack_vts.py) for safe non-destructive validation and a new clean runtime ZIP. Require one model3 index with existing referenced MOC3/textures/optional other assets, correct relative paths, no source reports in runtime root, and revalidation of the generated ZIP. **Do not invent missing files or claim real OrangeScarf ZIP was repaired without its actual contents.** Test the extracted folder in VTube Studio and mark absent runtime tests NOT RUN. Keep the development source/backups separate.
+**Task-scope gate (highest priority):** If the user requests a **skill, prompt, or knowledge-base correction only**, edit **only the explicitly requested documentation/skill file(s)**. Never modify, rebuild, repackage, upload, rename, or request the actual model as a prerequisite. Explain the correct principles and provide reusable checks, but report model-file inspection, model ZIP generation, and runtime tests as **NOT RUN**. Only perform model operations if explicitly requested in a later task.
+
+Before evaluating a user model, read [VTube Studio Folder Structure & Repack](../../docs/vtuber/VTS_FOLDER_STRUCTURE_AND_REPACK.md). Distinguish **the outer distribution/development ZIP** from **the actual installable model directory**. A bundle containing `OrangeScarf/`, `Source/` and reports is **not automatically invalid**: first inspect the content of `OrangeScarf/`; the actual folder containing `*.model3.json` defines the model root. Do not infer that missing files at the outer ZIP level are missing from the nested model.
+
+### Expected runtime folder (illustrative, not fixed filenames)
+
+```text
+<Character_vts>/                      # this folder is placed under Live2DModels/
+  <Character>.model3.json             # primary model manifest, required
+  <Character>.moc3                    # compiled Live2D model referenced by manifest
+  <Character>.2048/texture_00.png     # example ONLY; use the manifest's actual texture paths
+  <Character>.physics3.json           # only when model uses/references it
+  animations/*.motion3.json           # only when model uses/references them
+  expressions/*.exp3.json             # only when model uses/references them
+  <Character>.cdi3.json               # optional Cubism display-info file
+  <Character>.vtube.json              # optional VTube Studio sidecar
+  icon.png                            # recommended, name/format depends on application
+  items_pinned_to_model.json          # optional VTube Studio state
+```
+
+The example does **not** mean every subfolder/file must exist, or that every texture atlas must be named `.2048`. Consult `FileReferences` in **the model's own** `.model3.json`; preserve exact filenames, case, nested paths and relative references. Do not fabricate missing assets to imitate another model (e.g. Hiyori), and do not blindly flatten subdirectories.
+
+Keep **development-only** artifacts (original art, layered PSD/.cmo3, `Source/`, `BACA_DULU.txt`, `BUILD_REPORT.txt`, `Face_Integration_Preview.png`, `verification.json`, source scripts, build logs) in a **separate development bundle**, not mixed into the runtime model folder. A runtime ZIP may contain a single top-level model directory; the parent release bundle may also contain sources and reports as long as install instructions clearly identify the actual model folder.
+
+### Validation only when package inspection/build is authorized
+
+1. Discover all `*.model3.json` files. Require the intended model's identity to be unambiguous; do not silently choose between multiple models.
+2. Parse `FileReferences`, confirm the actual relative `Moc` and every `Textures` path, and verify every referenced physics, expression, motion, sound or other asset exists with correct case; do not require optional files unless referenced or explicitly requested.
+3. Check for collisions, path traversal, wrong nesting, unsupported extensions, damaged archives, and obviously irrelevant build artifacts in the runtime directory.
+4. If explicitly asked for a clean release ZIP, preserve originals, package only the model directory (using [repack_vts.py](../../scripts/vtuber/repack_vts.py) **if its assumptions fit the inspected input**), and then verify the freshly extracted output. The script performs **static structural checks only**; it does not prove the MOC3 renders, check animations visually, or certify runtime compatibility.
+5. **Actual VTube Studio import/tracking:** only claim success after testing in the real target app; otherwise state **NOT RUN**. Follow the existing physics, expression, motion and performance QA gates.
+
+**Evidence boundary:** Filenames shown in a smartphone file browser (including apparent `http://` prefixes) may be display artifacts. Do not treat them as actual filenames without inspecting ZIP entries. Preserve a distinction between **user-described listing**, **inspected files**, **inferred issue**, **static validation** and **runtime test**.
 
 ## Tool selection
 
@@ -59,6 +91,7 @@ Before claiming that an OrangeScarf/Live2D release is installable, distinguish *
 - Keep the original package untouched and create a rollback path.
 - Never fabricate file paths, hotkey schemas, runtime results, or compatibility claims.
 - Ask before destructive changes, publishing assets, or modifying unrelated repository content.
+- For a skill-only request, confine writes to the requested skill documentation. Do not repair a model or alter helper scripts/test files unless specifically authorized.
 - Stop and report the blocker if the source cannot support the requested movement without new artwork/layers.
 
 ## Acceptance criteria
@@ -86,4 +119,4 @@ For every version, report:
 - what has and has not been tested in VTube Studio/Cubism;
 - remaining limitations and the next user-side test.
 
-Update the V Skills case study and playbook after meaningful new findings.
+Record reusable lessons in the currently authorized skill/documentation scope. Update case studies, playbooks, scripts or model binaries **only when the user explicitly authorizes those files**.
