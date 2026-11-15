@@ -15,6 +15,10 @@
 9. For a documentation-only request, **do not touch user model files** or demand a model upload. For a model request, do not edit unrelated repository files.
 10. Use [real production evidence protocol](docs/vtuber/REAL_PRODUCTION_VALIDATION.md) and [fresh-agent evaluation suite](evals/agent_cases.json) to determine what can honestly be claimed.
 
+## Native artwork generator requirement for ChatGPT
+
+**If an explicitly requested/authorized output is a new or edited VTuber image**, ChatGPT must use its own **built-in Generate Image / `image_gen`** rather than outside image-generator sites, models or APIs. Do not send the art/reference to a third-party generator, request external API keys, or use paid services as the default. An external generator may be considered only after **separate explicit user approval** and actual permitted tool availability. If native generation is unavailable, report that limitation rather than silently substituting a website/API. Do not create images for documentation-only or model-file-only requests. Built-in image output is raster, not a layered PSD, Cubism model or ready-to-track rig; preserve source identity and require standard artwork/rig/export/runtime QA. Ordinary non-generative local image processing remains allowed.
+
 ## Change-management and acceptance
 
 - **Scope / approval:** do not invent hidden anatomy, redesign identity, upload private artwork to external AI services, purchase tools, publish or destroy originals without permission.
