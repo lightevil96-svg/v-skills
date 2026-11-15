@@ -4,6 +4,8 @@ Applies to AI-assisted 2D Live2D/VTube Studio and 3D/VRM pipelines. This is a **
 
 > **Tool result boundary:** repository unit tests can only validate their implemented checks. In particular, valid JSON and correct PNG/MOC magic bytes do **not** establish valid model geometry or importability. For real compiled models use available [Cubism SDK integrity checks](https://docs.live2d.com/en/cubism-sdk-manual/moc3-consistency/) and then the actual target app. See [START_HERE_AGENT.md](START_HERE_AGENT.md) for stage statuses and [LIVE2D_EXECUTION_RUNBOOK.md](LIVE2D_EXECUTION_RUNBOOK.md) for hands-on steps.
 
+> **Real binary requirement:** checking `.moc3` magic bytes, a PNG CRC, and JSON file references is necessary but not sufficient for model validity. Before certifying an export, run the official [MOC3 Consistency Checker](https://docs.live2d.com/en/cubism-editor-manual/moc3-consistency-checker/) or supported Cubism Core integrity check, and record the result for the actual export. See [REAL_PRODUCTION_VALIDATION.md](REAL_PRODUCTION_VALIDATION.md). Treat this check as a distinct gate from tracking/visual tests.
+
 ## Gate 0 — Intake / permissions / reproducibility
 
 - [ ] Target format, **exact target runtime/version**, platform (PC/mobile) and target crop are stated.
