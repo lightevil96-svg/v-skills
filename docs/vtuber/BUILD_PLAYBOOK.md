@@ -2,6 +2,8 @@
 
 This playbook defines a repeatable workflow for future VTuber model projects. It separates source-art limitations from rigging defects and distinguishes static validation from runtime proof.
 
+> **For a new AI agent:** Read [START_HERE_AGENT.md](START_HERE_AGENT.md) and the [Live2D Execution Runbook](LIVE2D_EXECUTION_RUNBOOK.md) first. This playbook is a detailed technical reference, **not** proof that any tool can produce .cmo3/.moc3 from text without an authentic Cubism authoring/export environment. See [Troubleshooting](TROUBLESHOOTING_AND_LIMITS.md) for blocked stages and [Agent Readiness Audit](AGENT_READINESS_AUDIT.md) for evidence limits.
+
 ## 1. Source asset requirements
 
 ### Preferred input
