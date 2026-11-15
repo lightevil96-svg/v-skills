@@ -12,12 +12,35 @@ import argparse
 import json
 import re
 import stat
+import struct
+import zlib
 import sys
 import zipfile
 from pathlib import Path, PurePosixPath
 
 EXCLUDE_TOP_DIRS = {"source", "originals", "working", "source-scripts", "docs", "reports", "previews", "__macosx", ".git"}
 EXCLUDE_TOP_FILES = {"baca_dulu.txt", "build_report.txt", "face_integration_preview.png", "verification.json", ".ds_store"}
+
+# Guardrails for untrusted ZIPs. These are conservative resource limits, not VTube Studio requirements.
+MAX_ENTRIES = 12000
+MAX_SINGLE_FILE = 512 * 1024 * 1024
+MAX_TOTAL_FILES = 2 * 1024 * 1024 * 1024
+MAX_COMPRESSION_RATIO = 1000
+
+
+def validate_file_budget(entries):
+    if len(entries) > MAX_ENTRIES:
+        raise PackageError(f"Too many files: {len(entries)} > {MAX_ENTRIES}")
+    total = 0
+    for name, size, compressed in entries:
+        if size < 0 or size > MAX_SINGLE_FILE:
+            raise PackageError(f"File exceeds safety size limit: {name} ({size})")
+        total += size
+        if total > MAX_TOTAL_FILES:
+            raise PackageError("Total input size exceeds safety limit")
+        if compressed is not None and size > 4 * 1024 * 1024 and size / max(1, compressed) > MAX_COMPRESSION_RATIO:
+            raise PackageError(f"Suspicious compression ratio (possible ZIP bomb): {name}")
+
 
 
 class PackageError(Exception):
@@ -63,6 +86,13 @@ class InputFiles:
             raise PackageError("Input must be a folder or an existing ZIP")
         if not self.items:
             raise PackageError("Input contains no files")
+        budgets = [
+            (name, info.file_size, info.compress_size)
+            if self.zip else (name, path.stat().st_size, None)
+            for name, info in self.items.items()
+            for path in ([info] if not self.zip else [None])
+        ]
+        validate_file_budget(budgets)
 
     def read(self, name):
         item = self.items[name]
@@ -152,26 +182,66 @@ def select_model(files):
 
 
 
-def inspect_asset_signatures(files, root, refs):
-    """Lightweight magic-byte checks; NOT a MOC parser, PNG decoder or SDK integrity test."""
-    import struct
+def inspect_png_container(data, ref):
+    """Check PNG signature, chunk boundaries/CRCs, IHDR, IDAT and IEND.
 
+    This is NOT a complete PNG pixel decoder nor evidence of visual quality.
+    """
+    signature = b"\\x89PNG\\r\\n\\x1a\\n"
+    if not data.startswith(signature):
+        raise PackageError(f"Invalid PNG signature: {ref}")
+    offset, width, height, seen_ihdr, seen_idat, seen_iend = 8, None, None, False, False, False
+    while offset < len(data):
+        if offset + 12 > len(data):
+            raise PackageError(f"Truncated PNG chunk header: {ref}")
+        chunk_length = struct.unpack(">I", data[offset:offset + 4])[0]
+        chunk_type = data[offset + 4:offset + 8]
+        end = offset + 12 + chunk_length
+        if chunk_length > MAX_SINGLE_FILE or end > len(data):
+            raise PackageError(f"Truncated/oversized PNG chunk: {ref}")
+        payload = data[offset + 8:offset + 8 + chunk_length]
+        stored_crc = struct.unpack(">I", data[offset + 8 + chunk_length:end])[0]
+        actual_crc = zlib.crc32(chunk_type + payload) & 0xffffffff
+        if stored_crc != actual_crc:
+            raise PackageError(f"PNG CRC mismatch: {ref}")
+        if not seen_ihdr:
+            if chunk_type != b"IHDR" or chunk_length != 13:
+                raise PackageError(f"PNG must start with a 13-byte IHDR: {ref}")
+            width, height = struct.unpack(">II", payload[:8])
+            if not 1 <= width <= 32768 or not 1 <= height <= 32768:
+                raise PackageError(f"Invalid PNG dimensions: {ref} ({width}x{height})")
+            seen_ihdr = True
+        elif chunk_type == b"IHDR":
+            raise PackageError(f"Multiple PNG IHDR chunks: {ref}")
+        if chunk_type == b"IDAT":
+            seen_idat = True
+        if chunk_type == b"IEND":
+            if chunk_length != 0:
+                raise PackageError(f"Invalid PNG IEND: {ref}")
+            seen_iend = True
+            if end != len(data):
+                raise PackageError(f"Trailing bytes after PNG IEND: {ref}")
+            break
+        offset = end
+    if not (seen_ihdr and seen_idat and seen_iend):
+        raise PackageError(f"Missing PNG IHDR, IDAT or IEND: {ref}")
+    return width, height
+
+
+def inspect_asset_signatures(files, root, refs):
+    """Basic MOC header and PNG container checks, NOT MOC binary integrity or runtime."""
     checked = []
     for kind, ref in refs:
-        if kind != "Moc" and kind != "Textures":
+        if kind not in ("Moc", "Textures"):
             continue
         data = files.read(root + ref)
         if kind == "Moc":
             if len(data) < 64 or data[:4] != b"MOC3":
-                raise PackageError(f"Invalid MOC3 header/size: {ref}; this is not a valid exporter check")
+                raise PackageError(f"Invalid MOC3 header/size: {ref}; full Cubism integrity NOT checked")
             checked.append({"kind": "MOC3_header_only", "path": ref, "bytes": len(data)})
         elif kind == "Textures":
-            if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
-                raise PackageError(f"Invalid PNG signature/IHDR: {ref}")
-            width, height = struct.unpack(">II", data[16:24])
-            if width == 0 or height == 0 or width > 32768 or height > 32768:
-                raise PackageError(f"Invalid PNG dimensions: {ref} ({width}x{height})")
-            checked.append({"kind": "PNG_header_only", "path": ref, "width": width, "height": height})
+            width, height = inspect_png_container(data, ref)
+            checked.append({"kind": "PNG_container_crc_only", "path": ref, "width": width, "height": height})
     return checked
 
 
