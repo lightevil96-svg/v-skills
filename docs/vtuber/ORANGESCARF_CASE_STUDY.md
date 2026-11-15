@@ -1,5 +1,7 @@
 # OrangeScarf VTuber Case Study
 
+> **Provenance caveat (2026-11-15):** This case study records **previously reported** project findings and static test counts, but this repository does not contain the original OrangeScarf input archives or validator logs necessary to reproduce them independently. The reported '227 passed' figure is historical documentation, **not a fresh test in this repository audit**, and actual VTube Studio import remains unverified. Read [START_HERE_AGENT.md](START_HERE_AGENT.md) before interpreting these findings.
+
 ## Project identity
 
 - Model: OrangeScarf
