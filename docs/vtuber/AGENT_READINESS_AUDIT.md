@@ -37,6 +37,15 @@ These scenarios are **expected behaviors**, not test results of an external AI m
 
 **Target for future testing:** 10/10 on a *separate, actual agent run* with all ten cases; no score may be reported without showing prompts, responses and evaluator notes. A passing repository CI build alone proves none of those behaviors.
 
+## New audit improvements and current proof status (2026-11-15)
+
+- Machine-readably defined [12 cold-start scenarios](../../evals/agent_cases.json), extending the ten prose prompts above with **private source upload consent** and **mock MOC3 header false positives**. Their expected agent behaviors are **NOT RUN** until an independent new agent executes them.
+- [evaluation worksheet CLI](../../scripts/vtuber/evaluate_agent_cases.py) can initialize/validate manual reviewer records with required transcript paths. It cannot tell if an agent response is substantively correct or whether a reviewer is truly independent; it is a record-keeping tool, **not an AI examiner**.
+- [preflight.py](../../scripts/vtuber/preflight.py) labels file types by extension and optional tool-executable paths, with all actual editor/runtime tests false by default.
+- Hardened [repack_vts.py](../../scripts/vtuber/repack_vts.py) checks archive budgets and PNG chunk CRCs, and still checks only the MOC magic/length. **A mock MOC with plausible header can pass!** Real exporter output plus [official MOC3 checker](https://docs.live2d.com/en/cubism-editor-manual/moc3-consistency-checker/) and actual VTube Studio import remain required.
+- [Real Production Validation](REAL_PRODUCTION_VALIDATION.md) defines the external source/editor/runtime demonstration and evidence form needed before claiming 10/10 production capability.
+- CI tests are **synthetic negative/structural tests**, not an independently generated premium character. A passing workflow cannot be counted as cold-start exam success.
+
 ## Production acceptance benchmark (requires a real model and runtime)
 
 A valid end-to-end demonstration must record:
