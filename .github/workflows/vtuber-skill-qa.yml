@@ -1,0 +1,40 @@
+name: VTuber skill repository QA
+on:
+  push:
+    paths:
+      - 'skills/**'
+      - 'docs/**'
+      - 'prompts/**'
+      - 'scripts/vtuber/**'
+      - 'tests/**'
+      - '.github/workflows/vtuber-skill-qa.yml'
+      - 'README.md'
+  pull_request:
+    paths:
+      - 'skills/**'
+      - 'docs/**'
+      - 'prompts/**'
+      - 'scripts/vtuber/**'
+      - 'tests/**'
+      - '.github/workflows/vtuber-skill-qa.yml'
+      - 'README.md'
+
+permissions:
+  contents: read
+
+jobs:
+  structural-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check Python syntax
+        run: python -m compileall -q scripts/vtuber tests
+      - name: Check local Markdown links
+        run: python scripts/vtuber/check_skill_links.py
+      - name: Unit tests (synthetic fixtures, not a real Cubism export)
+        run: python -m unittest discover -s tests -v
