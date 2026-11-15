@@ -31,12 +31,16 @@ Extract from the actual request:
 
 If details are missing but safe reversible progress is possible, inventory, research, diagnose and produce a non-destructive proposal. **Only ask** when essential permission or missing material prevents the required next action. Never invent authorization.
 
+## ChatGPT image-generation choice
+
+When run inside **ChatGPT**, use **ChatGPT's own built-in Generate Image tool (`image_gen` when available)** for any **explicitly requested or approved** concept/reference/expression/texture **image output or image edit**. Do **not** generate those images with external AI services, image generator websites, outside diffusion APIs or third-party accounts, and do not upload private reference art outside. Any external fallback requires **separate explicit user approval**; if the native tool is unavailable, report this and mark image generation not completed. This does not authorize unrequested image generation for pure rig/code/documentation work. A generated raster image still requires deliberate PSD/layer preparation and genuine Cubism authoring/export to become a functional Live2D model; native artwork generation is **not** proof of rig completion. Non-generative Python processing of approved images is allowed.
+
 ## Tool routing
 
 - **GitHub connector:** inspect user repository, existing documents, changed-files audit and authorized non-destructive additions/PRs.
 - **Local file/container/Python:** archive introspection, checksums, image/alpha/UV validators, texture processing of approved images, reproducibility scripts, local export inspection, preview/report generation.
 - **Web:** refresh official Cubism, VTube Studio, Blender/VRM, tools and service-license documentation for compatibility before a format-dependent action.
-- **Image generation/editing:** use **only when the user explicitly requests new or edited artwork**. Source image and reference character must remain canonical. A rendered image does not fulfill editable PSD layers or a functional rig.
+- **Image generation/editing:** for ChatGPT, use **built-in Generate Image only** when a new/edited image was explicitly requested or approved. No third-party generator without separate permission. Preserve the canonical reference; raster images do not fulfill PSD layer/rig deliverables.
 - **Native app runtime:** only if Cubism/VTube Studio/Blender/VRM app is actually reachable. Never claim device runtime testing from scripts alone.
 - If a required app is inaccessible, execute all possible static and visual QA, and clearly mark app tests **NOT RUN**.
 
