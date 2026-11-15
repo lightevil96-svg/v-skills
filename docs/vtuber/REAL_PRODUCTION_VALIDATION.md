@@ -30,6 +30,14 @@ No script can promote an artifact from (1) to (3) by changing an extension.
 
 If you only have GitHub/text/Python, you can **prepare** but cannot certify native rig/export/tracking. Do not automate external application interaction without a real supported computer interface.
 
+## Machine-checkable evidence handoff (partial check, not certification)
+
+Use `python scripts/vtuber/validate_release_evidence.py --init path/to/evidence.json`, complete the record with **real** source/output filenames, lowercase SHA-256 hashes, Cubism version, official consistency checker log, VTube Studio app version, recording paths, reviewer name and substantive review notes, then run `python scripts/vtuber/validate_release_evidence.py --check path/to/evidence.json`.
+
+This helper supports `KNOWLEDGE_ONLY`, `CONCEPT`, `ART_READY`, `RIG_AUTHORED`, `RUNTIME_EXPORTED`, `APP_IMPORTED` and `STREAM_READY` for a full **new Live2D** pipeline. It checks local evidence files and their hashes and requires applicable gates to say PASS. The return code **cannot establish the authenticity** of the claimed Cubism authoring session, recorded VTS gameplay, official MOC check log or subjective review. An agent or user could still enter dishonest values. A separate human reviewer must examine actual evidence. For 3D or compiled-only packaging tasks, use route-specific checks, **not** this full Live2D production validator.
+
+Don't put confidential project media or source files in public `v-skills`; keep evidence with its authorized project workspace and publish only permissioned summaries.
+
 ## Reproducible trial using a real model
 
 - **1. Fresh task:** give a new agent a brand-new authorized character source and a target app/hardware brief; **do not** give private prior chat context.
