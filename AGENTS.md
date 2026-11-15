@@ -20,6 +20,8 @@
 - **Scope / approval:** do not invent hidden anatomy, redesign identity, upload private artwork to external AI services, purchase tools, publish or destroy originals without permission.
 - **Runtime-folder structure:** model3 manifest determines exact paths. Separate installation-ready VTS folder from source PSD/.cmo3, `Source/` and reports; do not blindly copy Hiyori folder names.
 - **Tests (structural only):** run `python scripts/vtuber/check_skill_links.py` and `python -m unittest discover -s tests -v`. GitHub Actions performs Python syntax, local-link and synthetic fixture tests.
+- **Release privacy gate:** inspect packaging exclusions and never ship PSD/.cmo3, secret/API-key files, or unknown source files in a runtime-only VTS ZIP. The conservative repacker omits unrecognized files and fails on prohibited references. See [repacker](scripts/vtuber/repack_vts.py) and [VTS structure guide](docs/vtuber/VTS_FOLDER_STRUCTURE_AND_REPACK.md).
+- **Evidence integrity:** use [production evidence validator](scripts/vtuber/validate_release_evidence.py) to verify actual file hashes and gate prerequisites before announcing a milestone. Passing this verifier **does not** prove real MOC3 integrity, VTS tracking, independent human approval, or 10/10.
 - **No counterfeit completion:** don't turn tests of fake MOC headers, generated PNG previews, static package checks or human-scored agent answer forms into evidence of a working native rig.
 - **Handoff:** list exact real files changed, passed/failed/NOT RUN tests, remaining blockers, app compatibility, and one next required action. For new agent readiness, 12 challenge scenarios require actual separate agent transcripts and independent review; **do not self-award 10/10**.
 
