@@ -79,11 +79,24 @@ Keep **development-only** artifacts (original art, layered PSD/.cmo3, `Source/`,
 
 **Evidence boundary:** Filenames shown in a smartphone file browser (including apparent `http://` prefixes) may be display artifacts. Do not treat them as actual filenames without inspecting ZIP entries. Preserve a distinction between **user-described listing**, **inspected files**, **inferred issue**, **static validation** and **runtime test**.
 
+## ChatGPT native image generation policy (mandatory)
+
+When **ChatGPT** is the executing agent and the user explicitly requests or authorizes **new or edited VTuber artwork as an image deliverable** (e.g., concept art, reference sheet, expression illustration, a drawn texture or approved image edit), use **ChatGPT's built-in Generate Image capability** (the available native image-generation tool, commonly `image_gen`) as the **first and default image generator/editor**.
+
+- **Do not use external AI image generators** (Midjourney, Leonardo AI, external Stable Diffusion/ComfyUI servers, third-party image-generation APIs/websites, etc.) as a substitute. Do not send references/artwork to outside generation services or use external accounts, paid credits or API keys. An exception requires the user's **separate, explicit authorization** and an available permitted tool; otherwise remain on the native path.
+- **Do not switch silently:** if ChatGPT's native image tool is unavailable or cannot satisfy the requested image format, state the limitation and stop that image-generation step. Continue only permitted non-generative work; do not invent a finished image.
+- **Do not generate unrequested images:** documentation-only work, model file inspection, rig configuration and requests for machine-readable/editable files do not alone authorize a supporting illustration. When a request spans model creation and artwork, determine whether the user actually requested or authorized the **image component** before invoking it.
+- **Keep source identity and rights:** preserve originals, follow the user's reference/style requirements, compare outputs with approved design, and obtain separate approval before redesigning the character or reconstructing newly exposed hidden anatomy.
+- **Respect deliverable types:** native Generate Image produces raster artwork, **not** a guaranteed layered PSD/CLIP, editable Cubism `.cmo3`, valid compiled `.moc3`, rig or animation. Layer separation, redraw/underpaint, mesh deformation, export, and VTube Studio validation remain distinct stages.
+- **Non-generative processing remains permitted:** local crop/masking, alpha correction, atlas layout, resizing, UV validation and packaging of already-authorized image assets using Python/Cubism are engineering operations, not an alternative external image generator.
+
+This policy applies specifically to ChatGPT. For an agent running outside ChatGPT, choose only a user-approved available image-generation tool and disclose the difference; never claim access to ChatGPT's native Generate Image when absent.
+
 ## Tool selection
 
 - Use container/Python for archive inspection, image processing, code edits, mesh/UV analysis, deterministic builds, and static validation.
 - Use the GitHub connector for repository inspection and authorized documentation/code updates.
-- Use image generation only when the user explicitly asks for new or edited artwork. Do not use it as a substitute for editable layers, rig structures, or machine-readable model files.
+- For ChatGPT, use its **native Generate Image** for user-requested/authorized artwork; never silently use outside image generators. Do not substitute raster artwork for editable layers, rig structures, or machine-readable model files.
 - Use web research for current format specifications or undocumented compatibility questions. Prefer official Live2D/VTube Studio references.
 - Treat the target VTube Studio/Cubism runtime as unavailable until an actual app test is performed.
 
