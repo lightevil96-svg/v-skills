@@ -97,6 +97,22 @@ Verify:
 
 Create user hotkeys through the VTube Studio UI unless a current, exact hotkey schema has been verified. Do not invent undocumented JSON.
 
+### Runtime-folder vs development-bundle separation (mandatory)
+
+Do not confuse the **outer distribution ZIP** with the actual VTube Studio **model folder**. A parent bundle containing `OrangeScarf/`, `Source/` and reports is not inherently invalid if `OrangeScarf/` contains a complete model, but only the inner model folder belongs under VTube Studio's `StreamingAssets/Live2DModels/`. Do not put `Source/`, `BUILD_REPORT.txt`, preview images, or verification reports beside the runtime model files in an installable model folder.
+
+The installable folder must have one `*.model3.json` and its real referenced `*.moc3` and texture assets; any referenced physics, expressions, motions, and other files must resolve **relative to model3**. Do not force Hiyori's naming or folder depth onto a different model. `.cdi3.json` and `.vtube.json` are not universal prerequisites for first import; icon is recommended; VTube Studio pinned-item files are optional.
+
+Before release, use [VTS Folder Structure and Repack Guide](VTS_FOLDER_STRUCTURE_AND_REPACK.md) and run:
+
+```bash
+python scripts/vtuber/repack_vts.py 'INPUT.zip' --inspect
+python scripts/vtuber/repack_vts.py 'INPUT.zip' --output 'MODEL_VTS.zip' --folder-name 'MODEL_vts'
+python -m unittest discover -s tests -v
+```
+
+The output must be a **new** ZIP containing one model-root folder (not a mixed development bundle). Static checks are not proof of actual VTube Studio import.
+
 ## 7. Validation ladder
 
 ### Static validation
