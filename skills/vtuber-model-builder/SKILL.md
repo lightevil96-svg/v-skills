@@ -18,7 +18,7 @@ description: Build, repair, rig, animate, package, and validate Live2D/VTube Stu
 
 ## Extended research and test standards
 
-For new or AI-assisted work, read **[AI Production Research](../../docs/vtuber/AI_PRODUCTION_RESEARCH_2026.md)** and **[Production QA Matrix](../../docs/vtuber/PRODUCTION_QA_MATRIX.md)**, alongside the current [Build Playbook](../../docs/vtuber/BUILD_PLAYBOOK.md) and model case study. The [AI Production Agent Prompt](../../prompts/VTUBER_AI_PRODUCTION_AGENT.md) provides a reusable scoped execution template.
+**Token-efficient reading:** always read this skill + [START HERE](../../docs/vtuber/START_HERE_AGENT.md) and **one** route-specific runbook (2D or 3D). Consult the relevant sections of [AI Production Research](../../docs/vtuber/AI_PRODUCTION_RESEARCH_2026.md), [Production QA Matrix](../../docs/vtuber/PRODUCTION_QA_MATRIX.md), [Build Playbook](../../docs/vtuber/BUILD_PLAYBOOK.md), and a model case study **only when the task needs them**. Avoid loading unrelated 3D documentation for a 2D task or OrangeScarf notes for a different character. The [AI Production Agent Prompt](../../prompts/VTUBER_AI_PRODUCTION_AGENT.md) is optional reusable orchestration, not a substitute for actual file inspection and software availability.
 
 - Select **Live2D for VTube Studio**; VRM/3D needs a compatible 3D runtime. VRM 0.x and 1.0 support differs across applications.
 - AI-assisted face generation in Cubism is **semi-automatic** and documented for front-facing source faces; manually verify diagonals, feature occlusion and expressive keyforms.
