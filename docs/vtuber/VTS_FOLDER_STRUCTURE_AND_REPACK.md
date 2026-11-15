@@ -2,6 +2,8 @@
 
 **Status:** 2026-11-15. Based on the **user-supplied folder listings**, official VTube Studio guidance and Live2D model3 specifications. **Neither OrangeScarf ZIP nor hiyori_vts ZIP has been supplied to this workspace**; the underlying OrangeScarf model files and actual import behavior remain **NOT INSPECTED / NOT TESTED**. Do not claim the original ZIP was fixed.
 
+> **Fresh-agent requirement:** Follow [START_HERE_AGENT.md](START_HERE_AGENT.md) and [LIVE2D_EXECUTION_RUNBOOK.md](LIVE2D_EXECUTION_RUNBOOK.md) to distinguish valid package layout from source/rig creation. The ZIP repacker now checks light-weight `.moc3`/PNG signatures, but still **cannot** establish MOC3 integrity or actual VTube Studio import.
+
 ## 1. What the comparison actually proves
 
 | User-visible package level | OrangeScarf_V... | hiyori_vts | Diagnosis |
@@ -124,4 +126,4 @@ Existing case study records **v0.4: MOC3 version 3, 11 parameters, 8 ArtMeshes, 
 
 ## Evidence status
 
-**VERIFIED:** published documentation, current V Skills docs, script tested on a **synthetic representative folder** with a manifest and missing-path rejection, and GitHub docs updates. **NOT VERIFIED:** original OrangeScarf and Hiyori ZIP content, user-side installer import, texture rendering or tracking. Once the original ZIP is available, execute the script on those **actual bytes**, record file paths and hashes, and update the case study.
+**VERIFIED:** published documentation, current V Skills docs, synthetic **unit tests added** for packaging and missing-path rejection; CI status must be checked before claiming any tests passed, and GitHub docs updates. **NOT VERIFIED:** original OrangeScarf and Hiyori ZIP content, user-side installer import, texture rendering or tracking. Once the original ZIP is available, execute the script on those **actual bytes**, record file paths and hashes, and update the case study.
