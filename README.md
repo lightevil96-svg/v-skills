@@ -2,6 +2,24 @@
 
 A reusable knowledge base of agent skills, technical playbooks, prompts, and verified project lessons.
 
+## AI agent: start here
+
+**New AI agent? Read [START_HERE_AGENT.md](docs/vtuber/START_HERE_AGENT.md) first.** Then use the [step-by-step Live2D runbook](docs/vtuber/LIVE2D_EXECUTION_RUNBOOK.md), [troubleshooting and limitations](docs/vtuber/TROUBLESHOOTING_AND_LIMITS.md), [QA matrix](docs/vtuber/PRODUCTION_QA_MATRIX.md) and [cold-start audit](docs/vtuber/AGENT_READINESS_AUDIT.md). The root skill is [VTuber Model Builder](skills/vtuber-model-builder/SKILL.md).
+
+**Honest promise:** This repo is a knowledge base, prompts and structural packaging checks, **not a one-click professional Live2D authoring engine**. It does not supply a genuine .cmo3, .moc3, layered art, Cubism Editor or real VTube Studio runtime. To finish a high-quality working model the agent needs the actual source artwork, a compatible Cubism authoring/export environment, and in-app testing. Unit tests with synthetic fixtures do NOT certify a real model. For skill-only requests, no model edits should be performed.
+
+### Tooling / self-check
+
+```bash
+python -m compileall -q scripts/vtuber tests
+python scripts/vtuber/check_skill_links.py
+python -m unittest discover -s tests -v
+# The following only inspects an actual user-supplied existing Live2D model:
+python scripts/vtuber/repack_vts.py INPUT.zip --inspect
+```
+
+A passing test means repository Python/link/packaging behavior, **not** the proprietary MOC3's full correctness or VTube Studio compatibility. Use [Cubism SDK consistency verification](https://docs.live2d.com/en/cubism-sdk-manual/moc3-consistency/) and real in-app evidence when possible.
+
 ## VTuber / Live2D
 
 - [VTuber Model Builder Skill](skills/vtuber-model-builder/SKILL.md): reusable operating instructions for building, repairing, and validating Live2D/VTube Studio models.
