@@ -78,6 +78,76 @@ class RepackTest(unittest.TestCase):
             self.assertNotEqual(invalid_png.returncode, 0)
             self.assertIn('Invalid PNG signature', invalid_png.stderr)
 
+    def test_png_crc_corruption_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            png = root / 'OrangeScarf' / 'OrangeScarf.2048' / 'texture_00.png'
+            data = bytearray(png.read_bytes())
+            data[20] ^= 1  # Alter IHDR width without updating its CRC
+            png.write_bytes(data)
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('PNG CRC mismatch', run.stderr)
+
+    def test_png_missing_iend_fails(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            png = root / 'OrangeScarf' / 'OrangeScarf.2048' / 'texture_00.png'
+            png.write_bytes(png.read_bytes()[:-12])
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('Missing PNG', run.stderr)
+
+    def test_multiple_manifests_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            other = root / 'other'
+            other.mkdir()
+            (other / 'other.model3.json').write_text('{}')
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('Expected exactly one', run.stderr)
+
+    def test_zip_path_traversal_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            archive = Path(tmp) / 'dangerous.zip'
+            with zipfile.ZipFile(archive, 'w') as z:
+                z.writestr('../escape.txt', 'bad')
+            run = subprocess.run([sys.executable, str(SCRIPT), str(archive), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('Path traversal', run.stderr)
+
+    def test_zip_bomb_ratio_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            archive = Path(tmp) / 'bomb.zip'
+            with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED) as z:
+                z.writestr('huge.txt', b'0' * (12 * 1024 * 1024))
+            run = subprocess.run([sys.executable, str(SCRIPT), str(archive), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('Suspicious compression ratio', run.stderr)
+
+    def test_zip_case_collision_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'input'
+            fixture(root)
+            (root / 'OrangeScarf' / 'Readme.TXT').write_text('a')
+            (root / 'OrangeScarf' / 'README.txt').write_text('b')
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('Case-insensitive path collision', run.stderr)
+
+    def test_no_model_raises_error(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / 'empty'
+            root.mkdir()
+            (root / 'readme.txt').write_text('not a model')
+            run = subprocess.run([sys.executable, str(SCRIPT), str(root), '--inspect'], capture_output=True, text=True)
+            self.assertNotEqual(run.returncode, 0)
+            self.assertIn('Expected exactly one', run.stderr)
+
     def test_missing_reference_fails_closed(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / 'input'
