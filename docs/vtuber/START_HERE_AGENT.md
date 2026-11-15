@@ -2,6 +2,8 @@
 
 > **This is the mandatory entry point for a fresh AI agent.** Reading this repository does NOT provide artwork, a Cubism authoring engine, a VTube Studio installation, a webcam, or permission to change a user's model. Follow the instructions in order. If a dependency is unavailable, complete only verifiable preparatory work and report the gate as blocked / NOT RUN.
 
+> **Read-only preflight helper:** [preflight.py](../../scripts/vtuber/preflight.py) can inventory file suffixes and detect user-supplied editor executable paths, not prove GUI/model validity. The [Real Production Validation](REAL_PRODUCTION_VALIDATION.md) protocol is mandatory before asserting stream-ready results. Cold-start comprehension requires independently recorded [evaluation cases](../../evals/agent_cases.json), not a self-assigned score.
+
 ## 0. Five-minute orientation
 
 1. Read `skills/vtuber-model-builder/SKILL.md` first, then this page.
