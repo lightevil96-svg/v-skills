@@ -12,6 +12,10 @@
 4. Inspect **the actual attachments/working directory**. Never pretend a repository knowledge base contains PSD, .cmo3, or the model ZIP if it has only markdown and scripts.
 5. Check the capabilities and permissions matrix below before making any change.
 
+## ChatGPT-specific image-generation gate
+
+If and only if **new or edited artwork as an image deliverable** is requested/authorized, a ChatGPT-based production agent **must use ChatGPT's native Generate Image (`image_gen` if available)** before considering any other generation option. Do **not** use external generator websites, hosted models, or third-party image APIs as the default; any exception requires **separate explicit permission**. If native generation is unavailable, declare that artwork step blocked and continue only safe non-generative tasks. No image should be invented as a prerequisite for docs-only, rig-code-only, source-inspection or packaging tasks. Built-in generated images remain raster and do not automatically satisfy the editable separated-art/PSD, Cubism `.cmo3` or compiled `.moc3` gates. Preserve source artwork and identity; use local image processing only for authorized non-generative transformations.
+
 ## 1. What completion really means
 
 | Status to report | Required evidence | Do not call it |
