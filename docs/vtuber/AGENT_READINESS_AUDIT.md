@@ -10,7 +10,7 @@ Purpose: evaluate whether an agent encountering this repository **with no prior 
 
 | Finding | Improvement | Evidence threshold |
 | --- | --- | --- |
-| Unclear reading order and request scope | [START_HERE_AGENT](START_HERE_AGENT.md) plus top-of-skill routing | Agent reads mandatory start sequence, respects docs-only tasks |
+| Unclear reading order and request scope | [START_HERE_AGENT](START_HERE_AGENT.md) plus top-of-skill routing and the [3D VRM runbook](VRM_3D_EXECUTION_RUNBOOK.md) | Agent reads mandatory start sequence, respects docs-only tasks |
 | Documentation mistaken for runtime production ability | Capability matrix distinguishes .cmo3 authoring, .moc3 export, SDK reading and VTS app tests | No fake native model files; honest blockers when Cubism unavailable |
 | No practical PSD→Cubism→VTS sequence | [LIVE2D_EXECUTION_RUNBOOK](LIVE2D_EXECUTION_RUNBOOK.md) | Actual UI actions, saves, parameter and pose gates |
 | No failure recovery | [TROUBLESHOOTING_AND_LIMITS](TROUBLESHOOTING_AND_LIMITS.md) | Root-cause analysis, least-change fix, failed test rerun |
