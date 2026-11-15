@@ -166,6 +166,28 @@ def export_policy(relative_path):
     return False, "unknown extension (review manually)"
 
 
+# Basic file-type contracts for core Cubism exports. These are intentional
+# structural checks, not a substitute for Cubism export/version validation.
+REFERENCE_SUFFIXES = {
+    "Moc": (".moc3",),
+    "Textures": (".png",),
+    "Physics": (".physics3.json",),
+    "Pose": (".pose3.json",),
+    "DisplayInfo": (".cdi3.json",),
+    "UserData": (".userdata3.json",),
+    "Expressions": (".exp3.json",),
+}
+
+
+def validate_reference_types(refs):
+    for kind, path in refs:
+        accepted = REFERENCE_SUFFIXES.get(kind)
+        if kind.startswith("Motions/"):
+            accepted = (".wav", ".ogg", ".mp3") if kind.endswith("/Sound") else (".motion3.json",)
+        if accepted and not path.lower().endswith(accepted):
+            raise PackageError(f"Incorrect asset extension for {kind}: {path}; expected {accepted}")
+
+
 def select_model(files):
     model_indexes = sorted(n for n in files.items if n.endswith(".model3.json"))
     if len(model_indexes) != 1:
@@ -177,6 +199,7 @@ def select_model(files):
     except (ValueError, UnicodeError) as exc:
         raise PackageError(f"Invalid JSON in {index}: {exc}") from exc
     refs = refs_in_manifest(manifest)
+    validate_reference_types(refs)
     missing = [(kind, ref) for kind, ref in refs if root + ref not in files.items]
     if missing:
         raise PackageError("Missing manifest references (paths are case-sensitive): " + json.dumps(missing, ensure_ascii=False))
