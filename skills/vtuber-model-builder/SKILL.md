@@ -26,6 +26,13 @@ description: Build, repair, rig, animate, package, and validate Live2D/VTube Stu
 - AI upscaling, AI mesh generation, exported files and static validators are candidates/partial evidence, **not proof** of visual correctness, licensing or app runtime success.
 - Apply the QA matrix release gates: identity, layers, mesh/UV, parameters, pose grid, expressions, physics, package, actual target app and measured performance; explicitly mark unavailable runtime tests NOT RUN.
 
+## Objective readiness and real-model evidence
+
+- For any new model task, use the **read-only** [toolchain/input preflight](../../scripts/vtuber/preflight.py) when files are available. File-extension discovery or a supplied editor executable path **does not prove** that the editor operates or that a file is a legitimate Cubism export.
+- The skill has **12 cold-start behavior challenges** in [agent_cases.json](../../evals/agent_cases.json). The [review worksheet CLI](../../scripts/vtuber/evaluate_agent_cases.py) records independent evaluations, but does not judge responses semantically and cannot substitute for a new agent actually running those prompts.
+- To report *stream-ready* model production, follow [Real Production Validation](../../docs/vtuber/REAL_PRODUCTION_VALIDATION.md) and use official [MOC3 Consistency Checker](https://docs.live2d.com/en/cubism-editor-manual/moc3-consistency-checker/) or SDK integrity checks on **the real exported MOC3**, plus actual VTube Studio import/tracking and user visual acceptance.
+- Do not claim a **10/10 completion** based on documentation, file suffixes, code unit tests, syntax/lint success or manual self-scoring. Keep comprehension, structural CI, native authoring, runtime, and aesthetics separate. Mark every unexecuted gate NOT RUN and state the missing dependency.
+
 ## Mission
 
 Produce a stable, visually coherent, responsive VTuber model. Treat the artwork, mesh, parameters, physics, motions, VTube Studio configuration, and package as one system. Do not optimize one layer while silently breaking another.
