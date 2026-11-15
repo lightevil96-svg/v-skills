@@ -25,12 +25,16 @@ Deliver a versioned, installable Live2D/VTube Studio package with:
 - static validation evidence;
 - clear runtime test instructions and remaining limitations.
 
+## ChatGPT-native artwork generation
+
+If running in **ChatGPT** and the user has expressly requested/authorized **new or edited artwork as an image**, call the **built-in ChatGPT Generate Image capability (`image_gen`, when accessible)** rather than a third-party generator or external API. Never silently switch to Midjourney, Leonardo AI, hosted Stable Diffusion, ComfyUI servers or other outside image-generation services. Outside generation requires explicit additional user authorization; if the native tool is unavailable, state the blocker. Do not call image generation for pure skill, source code, rig files, or model ZIP tasks without an authorized image component. Treat generated images as raster references/assets only, not layered PSD, Cubism `.cmo3`, compiled `.moc3` or runtime-ready models. Preserve approved character identity. Local deterministic image processing is permitted.
+
 ## Tool choice
 
 Select tools by task:
 - container/Python for archives, code, image processing, mesh/UV analysis, builds, and validators;
 - GitHub connector for repository reads and authorized writes;
-- image generation only for explicitly requested artwork creation/editing;
+- ChatGPT built-in Generate Image for explicitly requested/approved artwork creation/editing; no outside image generators without separate permission;
 - web research for current official format/runtime specifications.
 
 Do not use a rendered image as a substitute for editable rig files or source code.
