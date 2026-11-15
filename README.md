@@ -6,6 +6,8 @@ A reusable knowledge base of agent skills, technical playbooks, prompts, and ver
 
 - [VTuber Model Builder Skill](skills/vtuber-model-builder/SKILL.md): reusable operating instructions for building, repairing, and validating Live2D/VTube Studio models.
 - [AI-Assisted Production Research (2026)](docs/vtuber/AI_PRODUCTION_RESEARCH_2026.md): sourced 2D/3D production routes, AI assistance boundaries, editing and compatibility constraints, licenses, and OrangeScarf experiments.
+- [VTube Studio Folder Structure & Repack Guide](docs/vtuber/VTS_FOLDER_STRUCTURE_AND_REPACK.md): OrangeScarf-vs-Hiyori file-level comparison, separate runtime/development bundles, and exact packaging requirements.
+- [Safe Runtime ZIP Repacker](scripts/vtuber/repack_vts.py): checks model3 referenced files and emits a clean one-model VTS ZIP (unit tests: [tests/test_repack_vts.py](tests/test_repack_vts.py)).
 - [Production QA Matrix](docs/vtuber/PRODUCTION_QA_MATRIX.md): measurable quality gates, pose grids, static validation, target-app runtime evidence, and release decisions.
 - [AI Production Agent Prompt](prompts/VTUBER_AI_PRODUCTION_AGENT.md): end-to-end prompt with scope, permissions, tools, format compatibility and stopping rules.
 - [Build Playbook](docs/vtuber/BUILD_PLAYBOOK.md): repeatable workflow, quality gates, asset requirements, rigging, physics, motion, and packaging.
