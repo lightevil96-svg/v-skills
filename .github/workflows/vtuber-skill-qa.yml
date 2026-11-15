@@ -7,6 +7,7 @@ on:
       - 'prompts/**'
       - 'scripts/vtuber/**'
       - 'tests/**'
+      - 'evals/**'
       - '.github/workflows/vtuber-skill-qa.yml'
       - 'README.md'
   pull_request:
@@ -16,6 +17,7 @@ on:
       - 'prompts/**'
       - 'scripts/vtuber/**'
       - 'tests/**'
+      - 'evals/**'
       - '.github/workflows/vtuber-skill-qa.yml'
       - 'README.md'
 
