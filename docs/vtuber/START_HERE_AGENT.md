@@ -5,7 +5,7 @@
 ## 0. Five-minute orientation
 
 1. Read `skills/vtuber-model-builder/SKILL.md` first, then this page.
-2. Read `docs/vtuber/LIVE2D_EXECUTION_RUNBOOK.md` if target is Live2D/VTube Studio, or `docs/vtuber/AI_PRODUCTION_RESEARCH_2026.md#5-high-quality-3d-vrm-route` for a 3D/VRM target.
+2. Read `docs/vtuber/LIVE2D_EXECUTION_RUNBOOK.md` if target is Live2D/VTube Studio, or `docs/vtuber/VRM_3D_EXECUTION_RUNBOOK.md` for a 3D/VRM target.
 3. Read `docs/vtuber/PRODUCTION_QA_MATRIX.md`, and the model-specific case study **only if it matches the model being worked on**. OrangeScarf is a historical example, not generic input or implied permission.
 4. Inspect **the actual attachments/working directory**. Never pretend a repository knowledge base contains PSD, .cmo3, or the model ZIP if it has only markdown and scripts.
 5. Check the capabilities and permissions matrix below before making any change.
